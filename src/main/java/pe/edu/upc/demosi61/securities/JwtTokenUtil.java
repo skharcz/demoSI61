@@ -71,8 +71,8 @@ public class JwtTokenUtil implements Serializable {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-                // FIX: Usar getBytes() en lugar de Base64 decode
-                .signWith(new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS512.getJcaName())).compact();
+                // FIX: Usar HS256 que requiere una clave más corta
+                .signWith(new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS256.getJcaName())).compact();
     }
 
     //validate token
