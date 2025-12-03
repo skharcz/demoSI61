@@ -37,14 +37,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 
         List<GrantedAuthority> roles = new ArrayList<>();
 
-        if (user.getRoles() != null) {
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
             System.out.println("Roles encontrados: " + user.getRoles().size());
             user.getRoles().forEach(rol -> {
                 System.out.println("Rol: " + rol.getRol());
                 roles.add(new SimpleGrantedAuthority(rol.getRol()));
             });
         } else {
-            System.out.println("!!! LISTA DE ROLES ES NULL !!!");
+            System.out.println("!!! LISTA DE ROLES VACÍA O NULL - ASIGNANDO ROLE_USER POR DEFECTO !!!");
+            roles.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
 
         UserDetails ud = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true, roles);
