@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.io.Serializable;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +44,8 @@ public class JwtTokenUtil implements Serializable {
 
     //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).build().parseClaimsJws(token).getBody();
+        // FIX: Usar getBytes() en lugar de Base64 decode
+        return Jwts.parser().setSigningKey(secret.getBytes()).build().parseClaimsJws(token).getBody();
     }
 
     //check if the token has expired
@@ -71,7 +71,8 @@ public class JwtTokenUtil implements Serializable {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
-                .signWith(new SecretKeySpec(Base64.getDecoder().decode(secret), SignatureAlgorithm.HS512.getJcaName())).compact();
+                // FIX: Usar getBytes() en lugar de Base64 decode
+                .signWith(new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS512.getJcaName())).compact();
     }
 
     //validate token
