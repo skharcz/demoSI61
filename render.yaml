@@ -1,0 +1,23 @@
+services:
+  # PostgreSQL Database
+  - type: pserver
+    name: demosi61-db
+    env: docker
+    plan: free
+    database: datos1
+    user: demosi61_user
+    
+  # Spring Boot Application
+  - type: web
+    name: demosi61-api
+    env: java
+    plan: free
+    buildCommand: ./mvnw clean install -DskipTests
+    startCommand: java -Dserver.port=$PORT -jar target/demoSI61-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: demosi61-db
+          property: connectionString
