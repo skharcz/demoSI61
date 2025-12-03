@@ -7,11 +7,10 @@ databases:
 services:
   - type: web
     name: demosi61-api
-    runtime: java
+    env: docker
     plan: free
     branch: main
-    buildCommand: ./mvnw clean install -DskipTests
-    startCommand: java -Dserver.port=$PORT -Dspring.profiles.active=production -jar target/demoSI61-0.0.1-SNAPSHOT.jar
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: production
